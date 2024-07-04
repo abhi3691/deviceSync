@@ -1,8 +1,10 @@
-import {RealmProvider, useApp} from '@realm/react';
+import {useApp} from '@realm/react';
 import {ActivityIndicator, SafeAreaView} from 'react-native';
 import {Credentials, OpenRealmBehaviorType} from 'realm';
 import React, {useEffect, useState} from 'react';
 import App from './App';
+import {RealmContext} from './models/task';
+const {RealmProvider} = RealmContext;
 function RealmWrapper(): JSX.Element {
   const app = useApp();
   const [isLogedIn, setIsLogedIn] = useState(false);
@@ -17,7 +19,7 @@ function RealmWrapper(): JSX.Element {
   }, [app]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1}}>
       {isLogedIn ? (
         <RealmProvider
           sync={{

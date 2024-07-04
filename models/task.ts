@@ -2,17 +2,17 @@ import {createRealmContext} from '@realm/react';
 import {BSON, Object} from 'realm';
 
 export class Task extends Object {
-  _id!: BSON.ObjectID;
+  _id!: BSON.ObjectId;
   title!: string;
   description!: string;
 
   static schema = {
-    name: 'task',
+    name: 'Task',
     primaryKey: '_id',
     properties: {
       _id: 'objectId',
-      title: 'string',
       description: 'string',
+      title: 'string',
     },
   };
 }
