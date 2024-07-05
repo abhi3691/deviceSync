@@ -4,7 +4,10 @@ Welcome to the Sample MongoDB Device Sync Using Realm project! This project demo
 
 ![e3ac30f7573c9aa05455b28467094f5f5d8da3f3_2_690x260](https://github.com/abhi3691/deviceSync/assets/54738565/dc2bd7f1-14c8-4272-98fc-36f557544ded)
 
-Uploading Screen Recording 2024-07-06 at 12.48.31 AM 2.mov…
+
+
+https://github.com/abhi3691/deviceSync/assets/54738565/d9222362-2201-47df-a58a-e74e8ec02c63
+
 
 ## Table of Contents
 
