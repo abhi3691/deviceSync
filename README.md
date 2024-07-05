@@ -2,6 +2,10 @@
 
 Welcome to the Sample MongoDB Device Sync Using Realm project! This project demonstrates how to set up and implement device synchronization using MongoDB Realm. It provides a straightforward example to help you understand and integrate MongoDB Realm into your applications.
 
+![e3ac30f7573c9aa05455b28467094f5f5d8da3f3_2_690x260](https://github.com/abhi3691/deviceSync/assets/54738565/dc2bd7f1-14c8-4272-98fc-36f557544ded)
+
+Uploading Screen Recording 2024-07-06 at 12.48.31 AM 2.mov…
+
 ## Table of Contents
 
 1. [Introduction](#introduction)
