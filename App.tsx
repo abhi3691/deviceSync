@@ -12,40 +12,60 @@ import {BSON} from 'realm';
 
 const {useQuery, useRealm} = RealmContext;
 
+type TaskState = {
+  title: string;
+  description: string;
+  taskId: BSON.ObjectId | null;
+};
+
 function App(): React.JSX.Element {
   const realm = useRealm();
   const tasks = useQuery(Task);
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [taskId, setTaskId] = useState(null);
+  const [taskState, setTaskState] = useState<TaskState>({
+    title: '',
+    description: '',
+    taskId: null,
+  });
 
   const addTask = useCallback(() => {
     realm.write(() => {
       realm.create('Task', {
         _id: new BSON.ObjectId(),
-        title,
-        description,
+        title: taskState.title,
+        description: taskState.description,
       });
     });
-    setTitle('');
-    setDescription('');
-  }, [realm, title, description]);
+    setTaskState({title: '', description: '', taskId: null});
+  }, [realm, taskState]);
 
   const updateTask = useCallback(() => {
-    if (taskId) {
+    if (taskState.taskId) {
       realm.write(() => {
-        let task = realm.objectForPrimaryKey('Task', taskId);
+        let task = realm.objectForPrimaryKey('Task', taskState.taskId);
         if (task) {
-          task.title = title;
-          task.description = description;
+          task.title = taskState.title;
+          task.description = taskState.description;
         }
       });
-      setTitle('');
-      setDescription('');
-      setTaskId(null);
+      setTaskState({title: '', description: '', taskId: null});
     }
-  }, [realm, title, description, taskId]);
+  }, [realm, taskState]);
+
+  const deleteTask = useCallback(
+    (id: BSON.ObjectId) => {
+      realm.write(() => {
+        let task = realm.objectForPrimaryKey('Task', id);
+        if (task) {
+          realm.delete(task);
+        }
+      });
+      if (id.equals(taskState.taskId)) {
+        setTaskState({title: '', description: '', taskId: null});
+      }
+    },
+    [realm, taskState],
+  );
 
   useEffect(() => {
     realm.subscriptions.update(mutableSubs => {
@@ -59,28 +79,37 @@ function App(): React.JSX.Element {
         data={tasks}
         keyExtractor={item => item._id.toString()}
         renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() => {
-              setTitle(item.title);
-              setDescription(item.description);
-              setTaskId(item._id);
-            }}>
-            <Text>{`${item.title} - ${item.description}`}</Text>
-          </TouchableOpacity>
+          <View style={styles.taskItem}>
+            <TouchableOpacity
+              onPress={() => {
+                setTaskState({
+                  title: item.title,
+                  description: item.description,
+                  taskId: item._id,
+                });
+              }}>
+              <Text>{`${item.title} - ${item.description}`}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => deleteTask(item._id)}>
+              <Text style={styles.deleteButtonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         )}
       />
       <View style={styles.row}>
         <TextInput
           style={styles.input}
           placeholder="Title"
-          value={title}
-          onChangeText={setTitle}
+          value={taskState.title}
+          onChangeText={text => setTaskState({...taskState, title: text})}
         />
         <TextInput
           style={styles.input}
           placeholder="Description"
-          value={description}
-          onChangeText={setDescription}
+          value={taskState.description}
+          onChangeText={text => setTaskState({...taskState, description: text})}
         />
       </View>
       <View style={styles.row}>
@@ -124,6 +153,20 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flex: 1,
     marginHorizontal: 5,
+  },
+  taskItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    padding: 5,
+    borderRadius: 5,
+  },
+  deleteButtonText: {
+    color: 'white',
   },
 });
 
